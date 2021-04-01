@@ -30,9 +30,9 @@ for i in range(1,howManyRadios+1):
         hard: "99999999"
     volumes:
       - transmission{radioNum}:/var/lib/transmission-daemon
-      - /mnt/download{radioNum}:/mnt/download
-      - /mnt/watch{radioNum}:/mnt/watch
-      - /mnt/incomplete{radioNum}:/mnt/incomplete
+      - /mnt/radio/download{radioNum}:/mnt/download
+      - /mnt/radio/watch{radioNum}:/mnt/watch
+      - /mnt/radio/incomplete{radioNum}:/mnt/incomplete
     ports:
       - "{portANum}:9091/tcp"
       - "{portBNum}:40001/tcp"
