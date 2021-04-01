@@ -1,6 +1,13 @@
 # sillyradio
 
+# Instructions
+Using python3, generate a docker-compose file
+
+python3 create.py > docker-compose.yaml
+
 # TODO
+ansible-galaxy collection install community.docker
+
 # set up fd stuff
 echo "1048576000" > /proc/sys/fs/nr_open
 

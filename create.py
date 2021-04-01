@@ -1,28 +1,45 @@
-# Many thanks to FairCopy on Reddit for the inspiration
+#!/usr/bin/python3
+
+# How many radios do you want? (not zero-indexed)
+howManyRadios = 25
+
+# Generate a docker-compose file with that many radios.
+
+# Print a header
+header = """# Many thanks to FairCopy on Reddit for the inspiration
 # and to github.com/dperson for the Docker image
+# You can use this to manually start containers using Docker Compose.
 version: '3'
 
-services:
+services:"""
+print(header)
 
-  transmission1:
-    container_name: transmission1
+for i in range(1,howManyRadios+1):
+  # Calculate the ports we need
+  portANum = 30001 + i - 1
+  portBNum = 40001 + i - 1
+
+  # Create the configuration
+  s = '''\
+  transmission{radioNum}:
+    container_name: transmission{radioNum}
     image: dperson/transmission
     ulimits:
       nofile:
         soft: "99999999"
         hard: "99999999"
     volumes:
-      - transmission1:/var/lib/transmission-daemon
-      - /mnt/download1:/mnt/download
-      - /mnt/watch1:/mnt/watch
-      - /mnt/incomplete1:/mnt/incomplete
+      - transmission{radioNum}:/var/lib/transmission-daemon
+      - /mnt/download{radioNum}:/mnt/download
+      - /mnt/watch{radioNum}:/mnt/watch
+      - /mnt/incomplete{radioNum}:/mnt/incomplete
     ports:
-      - "30001:9091/tcp"
-      - "40001:40001/tcp"
-      - "40001:40001/udp"
+      - "{portANum}:9091/tcp"
+      - "{portBNum}:40001/tcp"
+      - "{portBNum}:40001/udp"
     # All options: https://github.com/transmission/transmission/wiki/Editing-Configuration-Files#options
     environment:
-      - TRUSER=admin                  
+      - TRUSER=admin
       - TRPASSWD=example-password
       - USERID=1001
       - GROUPID=1001
@@ -54,6 +71,14 @@ services:
       - TR_WATCH_DIR_ENABLED=true
       - TR_WATCH_DIR=/mnt/watch
     restart: unless-stopped
+'''.format(radioNum=i,portANum=portANum,portBNum=portBNum)
+  # Print the configuration
+  print(s)
 
-volumes:
-  transmission1:
+# Finished printing the main stuff!
+
+# Now print volume definitions
+# Print the header
+print("volumes:")
+for i in range(1,howManyRadios+1):
+  print("  transmission"+str(i)+":")
