@@ -3,9 +3,6 @@
   hosts: radio
   become: true
 
-#  environment: 
-#    PYTHONPATH: "{{ lookup('env','PYTHONPATH') }}:/usr/lib/python3/dist-packages"
-
   vars:
     number_of_radios: 25
 
@@ -17,7 +14,7 @@
         group: root
         mode: 0777
         state: directory
-      with_sequence: start=0 count={{ number_of_radios }}
+      with_sequence: start=1 count={{ number_of_radios }}
 
     - name: Set up the download dirs on MooseFS
       file:
@@ -36,7 +33,7 @@
         group: root
         mode: 0777
         state: link
-      with_sequence: start=0 count={{ number_of_radios }}
+      with_sequence: start=1 count={{ number_of_radios }}
 
     - name: Set up the watch dirs
       file:
@@ -45,60 +42,4 @@
         group: root
         mode: 0777
         state: directory
-      with_sequence: start=0 count={{ number_of_radios }}
-
-    - name: Create the radios
-      community.docker.docker_compose:
-        project_name: radios
-        definition:
-          transmission1:
-            container_name: transmission1
-            image: dperson/transmission
-            ulimits:
-              nofile:
-                soft: "99999999"
-                hard: "99999999"
-            volumes:
-              - transmission1:/var/lib/transmission-daemon
-              - /mnt/download1:/mnt/download
-              - /mnt/watch1:/mnt/watch
-              - /mnt/incomplete1:/mnt/incomplete
-            ports:
-              - "30001:9091/tcp"
-              - "40001:40001/tcp"
-              - "40001:40001/udp"
-            # All options: https://github.com/transmission/transmission/wiki/Editing-Configuration-Files#options
-            environment:
-              - TRUSER=admin                  
-              - TRPASSWD=example-password
-              - USERID=1001
-              - GROUPID=1001
-              - TZ=Australia/Perth
-              - TR_CACHE_SIZE_MB=512
-              - TR_PEER_PORT=40001
-              - TR_BLOCKLIST_URL=http://127.0.0.1
-              - TR_MAX_PEERS_GLOBAL=500
-              - TR_DHT_ENABLED=false
-              - TR_PEX_ENABLED=false
-              - TR_RATIO_LIMIT_ENABLED=false
-              - TR_DOWNLOAD_DIR=/mnt/download
-              - TR_INCOMPLETE_DIR_ENABLED=true
-              - TR_INCOMPLETE_DIR=/mnt/incomplete
-              - TR_SPEED_LIMIT_DOWN=2048
-              - TR_SPEED_LIMIT_DOWN_ENABLED=false
-              - TR_SPEED_LIMIT_UP=1024
-              - TR_SPEED_LIMIT_UP_ENABLED=false
-              - TR_ALT_SPEED_DOWN=512
-              - TR_ALT_SPEED_UP=512
-              - TR_ALT_SPEED_TIME_ENABLED=true
-              - TR_ALT_SPEED_TIME_BEGIN=420 #  7:00, in minutes from midnight
-              - TR_ALT_SPEED_TIME_END=1380  # 23:00
-              - TR_ALT_SPEED_TIME_DAY=127   # All days: 127, Weekdays: 62, Weekends: 65
-              - TR_START_ADDED_TORRENTS=true
-              - TR_DOWNLOAD_QUEUE_ENABLED=true
-              - TR_DOWNLOAD_QUEUE_SIZE=400
-              - TR_SCRAPE_PAUSED_TORRENTS_ENABLED=false
-              - TR_WATCH_DIR_ENABLED=true
-              - TR_WATCH_DIR=/mnt/watch
-            restart: unless-stopped
-      register: output
+      with_sequence: start=1 count={{ number_of_radios }}
