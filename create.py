@@ -41,8 +41,8 @@ for i in range(1,howManyRadios+1):
     environment:
       - TRUSER=admin
       - TRPASSWD=example-password
-      - USERID=1001
-      - GROUPID=1001
+      - USERID=1003
+      - GROUPID=1003
       - TZ=Australia/Perth
       - TR_CACHE_SIZE_MB=512
       - TR_PEER_PORT=40001

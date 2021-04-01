@@ -7,11 +7,17 @@
     number_of_radios: 25
 
   tasks:
+    - name: Create the media user
+      ansible.builtin.user:
+        name: media
+        comment: Media
+        uid: 1003
+
     - name: Set up the incomplete dirs
       file:
         path: /mnt/radio/incomplete{{ item }}
-        owner: root
-        group: root
+        owner: media
+        group: media
         mode: 0777
         state: directory
       with_sequence: start=1 count={{ number_of_radios }}
@@ -19,8 +25,8 @@
     - name: Set up the download dirs on MooseFS
       file:
         path: /mnt/mfs/services/radio/final{{ item }}
-        owner: root
-        group: root
+        owner: media
+        group: media
         mode: 0777
         state: directory
       with_sequence: start=1 count={{ number_of_radios }}
@@ -29,17 +35,19 @@
       file:
         src: /mnt/mfs/services/radio/final{{ item }}
         dest: /mnt/radio/download{{ item }}
-        owner: root
-        group: root
+        #path: /mnt/radio/download{{ item }}
+        owner: media
+        group: media
         mode: 0777
+        #state: directory
         state: link
       with_sequence: start=1 count={{ number_of_radios }}
 
     - name: Set up the watch dirs
       file:
         path: /mnt/radio/watch{{ item }}
-        owner: root
-        group: root
+        owner: media
+        group: media
         mode: 0777
         state: directory
       with_sequence: start=1 count={{ number_of_radios }}
