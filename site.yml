@@ -22,25 +22,13 @@
         state: directory
       with_sequence: start=1 count={{ number_of_radios }}
 
-    - name: Set up the download dirs on MooseFS
+    - name: Set up the download dirs
       file:
-        path: /mnt/mfs/services/radio/final{{ item }}
+        path: /mfsbrick.3/final{{ item }}
         owner: media
         group: media
         mode: 0777
         state: directory
-      with_sequence: start=1 count={{ number_of_radios }}
-
-    - name: Set up the download dirs
-      file:
-        src: /mnt/mfs/services/radio/final{{ item }}
-        dest: /mnt/radio/download{{ item }}
-        #path: /mnt/radio/download{{ item }}
-        owner: media
-        group: media
-        mode: 0777
-        #state: directory
-        state: link
       with_sequence: start=1 count={{ number_of_radios }}
 
     - name: Set up the watch dirs

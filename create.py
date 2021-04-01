@@ -30,7 +30,7 @@ for i in range(1,howManyRadios+1):
         hard: "99999999"
     volumes:
       - transmission{radioNum}:/var/lib/transmission-daemon
-      - /mnt/radio/download{radioNum}:/mnt/download
+      - /mfsbrick.3/final{radioNum}:/mnt/download
       - /mnt/radio/watch{radioNum}:/mnt/watch
       - /mnt/radio/incomplete{radioNum}:/mnt/incomplete
     ports:
