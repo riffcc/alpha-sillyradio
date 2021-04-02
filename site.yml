@@ -7,11 +7,51 @@
     number_of_radios: 25
 
   tasks:
+    - name: Set all our sysctl settings
+      ansible.posix.sysctl:
+        name: net.core.rmem_default
+        value: 419430400
+
+    - name: Set all our sysctl settings
+      ansible.posix.sysctl:
+        name: net.core.rmem_max
+        value: 419430400
+
+    - name: Set all our sysctl settings
+      ansible.posix.sysctl:
+        name: net.core.wmem_default
+        value: 419430400
+
+    - name: Set all our sysctl settings
+      ansible.posix.sysctl:
+        name: net.core.wmem_max
+        value: 419430400
+
+    - name: Set all our sysctl settings
+      ansible.posix.sysctl:
+        name: fs.file_max
+        value: 1000000000
+
+    - name: Set all our sysctl settings
+      ansible.posix.sysctl:
+        name: vm.max_map_count
+        value: 419430400
+
     - name: Create the media user
       ansible.builtin.user:
         name: media
         comment: Media
         uid: 1003
+
+    - name: Checkout The Silly Radio
+      ansible.builtin.git:
+        repo: https://github.com/riffcc/sillyradio.git
+        dest: /home/media/sillyradio
+
+    - name: Checkout the upload toolkit
+      ansible.builtin.git:
+        repo: https://github.com/riffcc/upload-toolkit.git
+        dest: /home/media/upload-toolkit
 
     - name: Set up the incomplete dirs
       file:
