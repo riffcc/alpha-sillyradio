@@ -66,7 +66,7 @@ for i in range(1,howManyRadios+1):
       - TR_ALT_SPEED_TIME_DAY=127   # All days: 127, Weekdays: 62, Weekends: 65
       - TR_START_ADDED_TORRENTS=true
       - TR_DOWNLOAD_QUEUE_ENABLED=true
-      - TR_DOWNLOAD_QUEUE_SIZE=400
+      - TR_DOWNLOAD_QUEUE_SIZE=80
       - TR_SCRAPE_PAUSED_TORRENTS_ENABLED=false
       - TR_WATCH_DIR_ENABLED=true
       - TR_WATCH_DIR=/mnt/watch

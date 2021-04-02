@@ -40,7 +40,7 @@
     - name: Set all our sysctl settings
       ansible.posix.sysctl:
         name: vm.max_map_count
-        value: 419430400
+        value: "419430400"
 
     - name: Create the media user
       ansible.builtin.user:
@@ -51,12 +51,14 @@
     - name: Checkout The Silly Radio
       ansible.builtin.git:
         repo: https://github.com/riffcc/sillyradio.git
-        dest: /home/media/sillyradio
+        dest: /home/wings/sillyradio
+      become: no
 
     - name: Checkout the upload toolkit
       ansible.builtin.git:
         repo: https://github.com/riffcc/upload-toolkit.git
-        dest: /home/media/upload-toolkit
+        dest: /home/wings/upload-toolkit
+      become: no
 
     - name: Set up the incomplete dirs
       file:
