@@ -17,7 +17,7 @@ print(header)
 for i in range(1,howManyRadios+1):
   # Calculate the ports we need
   portANum = 21130 + i - 1
-  portBNum = 40001 + i - 1
+  portBNum = 6881 + i - 1
 
   # Create the configuration
   s = '''\
@@ -34,14 +34,14 @@ for i in range(1,howManyRadios+1):
       - /mnt/radio/watch{radioNum}:/mnt/watch
       - /mnt/radio/incomplete{radioNum}:/mnt/incomplete
     ports:
-      - "{portANum}:9091/tcp"
-      - "{portBNum}:40001/tcp"
-      - "{portBNum}:40001/udp"
+      - "{portANum}:8080/tcp"
+      - "{portBNum}:6881"
+      - "{portBNum}:6881/udp"
     environment:
       - PUID=1003
       - PGID=1003
       - TZ=Australia/Perth
-      - WEBUI_PORT={portANum}
+      - WEBUI_PORT=8080
     restart: unless-stopped
 '''.format(radioNum=i,portANum=portANum,portBNum=portBNum)
   # Print the configuration
