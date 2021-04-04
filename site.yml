@@ -46,6 +46,7 @@
       ansible.builtin.user:
         name: media
         comment: Media
+        shell: /bin/bash
         uid: 1003
 
     - name: Checkout The Silly Radio
