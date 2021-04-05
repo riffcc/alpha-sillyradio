@@ -1,30 +1,37 @@
-# sillyradio
+The Silly Radio
+===============
+Silly Radio allows you to create a farm of BitTorrent clients used for hosting massive amounts of files with few resources. It is intended to be capable of hosting one million torrents on a single machine.
 
-# Instructions
-Follow the TODO first.
+Requirements
+============
+* A modern Linux, details are up to you. (WSL unsupported but may work.)
+* Git
+* Ansible 2.9+
+* Enough RAM and CPU to handle the number of torrents you want to host
+* Plenty of disk space!
+* Docker Engine and docker-compose installed and working
+* (Optional) Docker access for the user you wish to work with
 
-Using python3, generate a docker-compose file
+Getting started
+===============
+Check out this repository using Git.
 
-python3 create.py > docker-compose.yaml
+`git clone https://github.com/riffcc/sillyradio.git`
 
-Then run docker-compose up -d
+Edit the inventory file to include your machine.
 
-Done! Your farm will start on port 30001, incrementing by 1 for each instance.
+Use Ansible to bring up your machine.
+
+`ansible-playbook site.yml`
+
+Use Python to generate a docker-compose file.
+
+`python3 create.py > docker-compose.yaml`
+
+Then use docker-compose to bring up your farm.
+
+`docker-compose up`
+
+Done! Your farm will start on port 21130, incrementing by 1 for each instance.
 
 Username admin and password default-password are the default credentials but feel free to change them as needed.
-
-# TODO
-## set up fd stuff
-echo "1048576000" > /proc/sys/fs/nr_open
-
-## set kernel tuning and limits
-net.core.rmem_default=419430400
-net.core.rmem_max=419430400
-
-net.core.wmem_default=419430400
-net.core.wmem_max=419430400
-
-fs.file-max=1000000000
-
-vm.max_map_count=1000000000
-
