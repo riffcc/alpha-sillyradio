@@ -1,0 +1,159 @@
+
+# Many thanks to FairCopy on Reddit for the inspiration.
+# Thanks to https://github.com/crazy-max/docker-rtorrent-rutorrent/ for the Docker image.
+# You can use this to manually start containers using Docker Compose.
+version: '3.2'
+
+services:
+  geoip1:
+    image: crazymax/geoip-updater:latest
+    volumes:
+      - "/opt/radio/1/config/geoip:/data"
+    env_file:
+      - "config/geoip.env"
+    restart: always
+
+  rtorrent1:
+    image: crazymax/rtorrent-rutorrent:latest
+    expose:
+      - "21002/udp"
+      - "22002"
+      - "23002"
+      - "24002"
+      - "25002"
+    ports:
+      - target: 21002
+        published: 21002
+        protocol: udp
+      - target: 23002
+        published: 23002
+        protocol: tcp
+      - target: 24002
+        published: 24002
+        protocol: tcp
+      - target: 25002
+        published: 25002
+        protocol: tcp
+    env_file:
+      - "config/rtorrent.env"
+    volumes:
+      - "/opt/radio/1/data:/data"
+      - "/opt/radio/1/completed:/downloads"
+      - "/opt/radio/1/config/passwd"
+    ulimits:
+      nproc: 6553
+      nofile:
+        soft: 12345678
+        hard: 123456789
+    restart: always
+
+  rtorrent-logs1:
+    image: bash
+    command: bash -c 'tail -f /log/*.log'
+    depends_on:
+      - rtorrent1
+    volumes:
+      - "/opt/radio/1/logs:/log"
+    restart: always
+
+  geoip2:
+    image: crazymax/geoip-updater:latest
+    volumes:
+      - "/opt/radio/2/config/geoip:/data"
+    env_file:
+      - "config/geoip.env"
+    restart: always
+
+  rtorrent2:
+    image: crazymax/rtorrent-rutorrent:latest
+    expose:
+      - "21003/udp"
+      - "22003"
+      - "23003"
+      - "24003"
+      - "25003"
+    ports:
+      - target: 21003
+        published: 21003
+        protocol: udp
+      - target: 23003
+        published: 23003
+        protocol: tcp
+      - target: 24003
+        published: 24003
+        protocol: tcp
+      - target: 25003
+        published: 25003
+        protocol: tcp
+    env_file:
+      - "config/rtorrent.env"
+    volumes:
+      - "/opt/radio/2/data:/data"
+      - "/opt/radio/2/completed:/downloads"
+      - "/opt/radio/2/config/passwd"
+    ulimits:
+      nproc: 6553
+      nofile:
+        soft: 12345678
+        hard: 123456789
+    restart: always
+
+  rtorrent-logs2:
+    image: bash
+    command: bash -c 'tail -f /log/*.log'
+    depends_on:
+      - rtorrent2
+    volumes:
+      - "/opt/radio/2/logs:/log"
+    restart: always
+
+  geoip3:
+    image: crazymax/geoip-updater:latest
+    volumes:
+      - "/opt/radio/3/config/geoip:/data"
+    env_file:
+      - "config/geoip.env"
+    restart: always
+
+  rtorrent3:
+    image: crazymax/rtorrent-rutorrent:latest
+    expose:
+      - "21004/udp"
+      - "22004"
+      - "23004"
+      - "24004"
+      - "25004"
+    ports:
+      - target: 21004
+        published: 21004
+        protocol: udp
+      - target: 23004
+        published: 23004
+        protocol: tcp
+      - target: 24004
+        published: 24004
+        protocol: tcp
+      - target: 25004
+        published: 25004
+        protocol: tcp
+    env_file:
+      - "config/rtorrent.env"
+    volumes:
+      - "/opt/radio/3/data:/data"
+      - "/opt/radio/3/completed:/downloads"
+      - "/opt/radio/3/config/passwd"
+    ulimits:
+      nproc: 6553
+      nofile:
+        soft: 12345678
+        hard: 123456789
+    restart: always
+
+  rtorrent-logs3:
+    image: bash
+    command: bash -c 'tail -f /log/*.log'
+    depends_on:
+      - rtorrent3
+    volumes:
+      - "/opt/radio/3/logs:/log"
+    restart: always

@@ -1,79 +1,105 @@
 #!/usr/bin/python3
+import os
 
 # How many radios do you want? (not zero-indexed)
 howManyRadios = 3
 
-# Generate a docker-compose file with that many radios.
+os.makedirs("/opt/radio/", exist_ok=True)
 
-# Print a header
-header = """# Many thanks to FairCopy on Reddit for the inspiration.
+# Start our docker-compose.yml file
+compose = """
+# Many thanks to FairCopy on Reddit for the inspiration.
 # Thanks to https://github.com/crazy-max/docker-rtorrent-rutorrent/ for the Docker image.
 # You can use this to manually start containers using Docker Compose.
 version: '3.2'
 
 services:"""
-print(header)
 
-for i in range(1,howManyRadios+1):
-  # Calculate the ports we need
-  portANum = 21130 + i - 1
-  portBNum = 6881 + i - 1
+# Generate a docker-compose fragment for each radio.
+for i in range(1, howManyRadios+1):
+    # Set up ports
+    dhtPort = 21002
+    xmlRPCPort = 22002
+    rutorrentPort = 23002
+    webDAVPort = 24002
+    rtIncPort = 25002
+    # Calculate the ports we need
+    dhtPortSet = 21002 + i - 1
+    xmlRPCPortSet = 22002 + i - 1
+    rutorrentPortSet = 23002 + i - 1
+    webDAVPortSet = 24002 + i - 1
+    rtIncPortSet = 25002 + i - 1
 
-  # Create the configuration
-  s = '''\
-  geoip{radioNum}:
+    # Create the configuration
+    dc = '''
+  geoip{i}:
     image: crazymax/geoip-updater:latest
     volumes:
-      - "/opt/radio/{radioNum}/data/geoip:/data"
+      - "/opt/radio/{i}/config/geoip:/data"
     env_file:
-      - "/opt/radio/{radioNum}/geoip-updater.env"
+      - "config/geoip.env"
     restart: always
 
-  rtorrent{radioNum}:
+  rtorrent{i}:
     image: crazymax/rtorrent-rutorrent:latest
     expose:
-      - "${RT_DHT_PORT}/udp"
-      - "${XMLRPC_PORT}"
-      - "${RUTORRENT_PORT}"
-      - "${WEBDAV_PORT}"
-      - "${RT_INC_PORT}"
+      - "{dhtPortSet}/udp"
+      - "{xmlRPCPortSet}"
+      - "{rutorrentPortSet}"
+      - "{webDAVPortSet}"
+      - "{rtIncPortSet}"
     ports:
-      - target: ${RT_DHT_PORT}
-        published: ${RT_DHT_PORT}
+      - target: {dhtPortSet}
+        published: {dhtPortSet}
         protocol: udp
-      - target: ${RUTORRENT_PORT}
-        published: ${RUTORRENT_PORT}
+      - target: {rutorrentPortSet}
+        published: {rutorrentPortSet}
         protocol: tcp
-      - target: ${WEBDAV_PORT}
-        published: ${WEBDAV_PORT}
+      - target: {webDAVPortSet}
+        published: {webDAVPortSet}
         protocol: tcp
-      - target: ${RT_INC_PORT}
-        published: ${RT_INC_PORT}
+      - target: {rtIncPortSet}
+        published: {rtIncPortSet}
         protocol: tcp
     env_file:
-      - "/opt/radio/{radioNum}/rtorrent-rutorrent.env"
-      - ".env"
+      - "config/rtorrent.env"
     volumes:
-      - "./data:/data"
-      - "./downloads:/downloads"
-      - "./passwd:/passwd"
+      - "/opt/radio/{i}/data:/data"
+      - "/opt/radio/{i}/completed:/downloads"
+      - "/opt/radio/{i}/config/passwd"
     ulimits:
-      nproc: 65535
+      nproc: 6553
       nofile:
-        soft: 32000
-        hard: 40000
+        soft: 12345678
+        hard: 123456789
     restart: always
 
-  rtorrent-logs:
+  rtorrent-logs{i}:
     image: bash
     command: bash -c 'tail -f /log/*.log'
     depends_on:
-      - rtorrent-rutorrent
+      - rtorrent{i}
     volumes:
-      - "./data/rtorrent/log:/log"
+      - "/opt/radio/{i}/logs:/log"
     restart: always
-'''.format(radioNum=i,portANum=portANum,portBNum=portBNum)
-  # Print the configuration
-  print(s)
+'''.format(i=i,
+           dhtPortSet=dhtPortSet,
+           xmlRPCPortSet=xmlRPCPortSet,
+           rutorrentPortSet=rutorrentPortSet,
+           webDAVPortSet=webDAVPortSet,
+           rtIncPortSet=rtIncPortSet
+           )
+    # Write the configuration
+    print(dc)
+    compose = compose + dc
+    os.makedirs("/opt/radio/"+ str(i), exist_ok=True)
+    os.makedirs("/opt/radio/"+ str(i) +"/data", exist_ok=True)
+    os.makedirs("/opt/radio/"+ str(i) +"/completed", exist_ok=True)
+    os.makedirs("/opt/radio/"+ str(i) +"/logs", exist_ok=True)
+    os.makedirs("/opt/radio/"+ str(i) +"/config", exist_ok=True)
 
-# Finished printing the main stuff!
+f = open("docker-compose.yml", "w")
+f.write(compose)
+f.close()
+
+# Generate the final file
