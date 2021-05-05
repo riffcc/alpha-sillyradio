@@ -35,3 +35,8 @@ Then use docker-compose to bring up your farm.
 Done! Your farm will start on port 21130, incrementing by 1 for each instance.
 
 Username admin and password default-password are the default credentials but feel free to change them as needed.
+
+## Credits & Authors
+* Thanks to JetBrains for generously providing development tools.
+* Developed by Zorlin.
+* https://github.com/crazy-max/docker-rtorrent-rutorrent

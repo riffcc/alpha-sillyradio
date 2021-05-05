@@ -24,9 +24,9 @@ for i in range(1,howManyRadios+1):
   geoip{radioNum}:
     image: crazymax/geoip-updater:latest
     volumes:
-      - "./data/geoip:/data"
+      - "/opt/radio/{radioNum}/data/geoip:/data"
     env_file:
-      - "./geoip-updater.env"
+      - "/opt/radio/{radioNum}/geoip-updater.env"
     restart: always
 
   rtorrent{radioNum}:
@@ -51,7 +51,7 @@ for i in range(1,howManyRadios+1):
         published: ${RT_INC_PORT}
         protocol: tcp
     env_file:
-      - "rtorrent-rutorrent.env"
+      - "/opt/radio/{radioNum}/rtorrent-rutorrent.env"
       - ".env"
     volumes:
       - "./data:/data"
