@@ -68,10 +68,10 @@ for i in range(1, howManyRadios+1):
       - "/opt/radio/{i}/completed:/downloads"
       - "/opt/radio/{i}/config/passwd"
     ulimits:
-      nproc: 6553
+      nproc: 65535
       nofile:
-        soft: 12345678
-        hard: 123456789
+        soft: 123456789
+        hard: 419430400
     restart: always
 
   rtorrent-logs{i}:
