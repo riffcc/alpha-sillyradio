@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+from pathlib import Path
 import os
 
 # How many radios do you want? (not zero-indexed)
@@ -98,7 +99,7 @@ for i in range(1, howManyRadios+1):
     os.makedirs("/opt/radio/"+ str(i) +"/logs", exist_ok=True)
     os.makedirs("/opt/radio/"+ str(i) +"/config", exist_ok=True)
 
-f = open("docker-compose.yml", "w")
+f = open(Path.home() + "/docker-compose.yml", "w")
 f.write(compose)
 f.close()
 
