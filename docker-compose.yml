@@ -94,8 +94,8 @@ services:
     ulimits:
       nproc: 6553
       nofile:
-        soft: 12345678
-        hard: 123456789
+        soft: 419430400
+        hard: 419430400
     restart: always
 
   rtorrent-logs2:

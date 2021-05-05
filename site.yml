@@ -60,39 +60,3 @@
         repo: https://github.com/riffcc/upload-toolkit.git
         dest: /home/wings/upload-toolkit
       become: no
-
-    - name: Set up the config dirs
-      file:
-        path: /mnt/radio/config{{ item }}
-        owner: media
-        group: media
-        mode: 0777
-        state: directory
-      with_sequence: start=1 count={{ number_of_radios }}
-
-    - name: Set up the incomplete dirs
-      file:
-        path: /mnt/radio/incomplete{{ item }}
-        owner: media
-        group: media
-        mode: 0777
-        state: directory
-      with_sequence: start=1 count={{ number_of_radios }}
-
-    - name: Set up the download dirs
-      file:
-        path: /mfsbrick.3/final{{ item }}
-        owner: media
-        group: media
-        mode: 0777
-        state: directory
-      with_sequence: start=1 count={{ number_of_radios }}
-
-    - name: Set up the watch dirs
-      file:
-        path: /mnt/radio/watch{{ item }}
-        owner: media
-        group: media
-        mode: 0777
-        state: directory
-      with_sequence: start=1 count={{ number_of_radios }}
