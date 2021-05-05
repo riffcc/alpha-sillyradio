@@ -29,10 +29,10 @@ for i in range(1,howManyRadios+1):
         soft: "99999999"
         hard: "99999999"
     volumes:
-      - /mfsbrick.3/final{radioNum}:/downloads
-      - /mnt/radio/config{radioNum}:/config
-      - /mnt/radio/watch{radioNum}:/watch
-      - /mnt/radio/incomplete{radioNum}:/incomplete
+      - /opt/radio/final{radioNum}:/downloads
+      - /opt/radio/config{radioNum}:/config
+      - /opt/radio/watch{radioNum}:/watch
+      - /opt/radio/incomplete{radioNum}:/incomplete
     ports:
       - "{portANum}:8080/tcp"
       - "{portBNum}:6881"
