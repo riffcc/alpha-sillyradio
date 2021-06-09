@@ -2,6 +2,11 @@ The Silly Radio
 ===============
 Silly Radio allows you to create a farm of BitTorrent clients used for hosting massive amounts of files with few resources. It is intended to be capable of hosting one million torrents on a single machine.
 
+TODO
+====
+* Ansible should autocreate /opt/radio/ owned by the media user
+* Move media user to a more unique UID/GID
+
 Requirements
 ============
 * A modern Linux, details are up to you. (WSL unsupported but may work.)
