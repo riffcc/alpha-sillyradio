@@ -40,6 +40,10 @@ for i in range(1, howManyRadios+1):
     env_file:
       - "config/geoip.env"
     restart: always
+    environment:
+      - PUID=1003
+      - PGID=1003
+      - TZ=Australia/Perth
 
   rtorrent{i}:
     image: crazymax/rtorrent-rutorrent:latest
@@ -50,16 +54,16 @@ for i in range(1, howManyRadios+1):
       - "{webDAVPortSet}"
       - "{rtIncPortSet}"
     ports:
-      - target: {dhtPortSet}
+      - target: 6881
         published: {dhtPortSet}
         protocol: udp
-      - target: {rutorrentPortSet}
+      - target: 8080
         published: {rutorrentPortSet}
         protocol: tcp
-      - target: {webDAVPortSet}
+      - target: 9000
         published: {webDAVPortSet}
         protocol: tcp
-      - target: {rtIncPortSet}
+      - target: 50000
         published: {rtIncPortSet}
         protocol: tcp
     env_file:
@@ -67,13 +71,17 @@ for i in range(1, howManyRadios+1):
     volumes:
       - "/opt/radio/{i}/data:/data"
       - "/opt/radio/{i}/completed:/downloads"
-      - "/opt/radio/{i}/config/passwd"
+      - "/opt/radio/{i}/config:/passwd"
     ulimits:
       nproc: 65535
       nofile:
         soft: 123456789
         hard: 419430400
     restart: always
+    environment:
+      - PUID=1003
+      - PGID=1003
+      - TZ=Australia/Perth
 
   rtorrent-logs{i}:
     image: bash
@@ -81,8 +89,12 @@ for i in range(1, howManyRadios+1):
     depends_on:
       - rtorrent{i}
     volumes:
-      - "/opt/radio/{i}/logs:/log"
+      - "./data/rtorrent/log:/log"
     restart: always
+    environment:
+      - PUID=1003
+      - PGID=1003
+      - TZ=Australia/Perth
 '''.format(i=i,
            dhtPortSet=dhtPortSet,
            xmlRPCPortSet=xmlRPCPortSet,
@@ -99,7 +111,7 @@ for i in range(1, howManyRadios+1):
     os.makedirs("/opt/radio/"+ str(i) +"/logs", exist_ok=True)
     os.makedirs("/opt/radio/"+ str(i) +"/config", exist_ok=True)
 
-f = open(Path.home() + "/docker-compose.yml", "w")
+f = open(str(Path.home()) + "/docker-compose.yml", "w")
 f.write(compose)
 f.close()
 
